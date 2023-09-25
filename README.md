@@ -8,14 +8,10 @@ docker-compose -p logs -f docker-compose-log.yaml up
 
 ## Start the load test
 
-```bash
- docker-compose up loki grafana influxdb chronograf
-```
+Test Files are kept in the `k6/tests` directory
+
+## Run tests
 
 ```bash
-docker-compose -p k6 up promtail
-```
-
-```bash
-docker-compose run --rm k6 run /scripts/setup.test.js
+TEST=circle docker-compose -p k6 up --force-recreate --build k6
 ```
