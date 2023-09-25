@@ -25,7 +25,8 @@ VOLUME /logs
 RUN chown -R k6:k6 /logs
 USER k6
 #WORKDIR /home/k6
-COPY ./k6/tests /app/tests
+COPY ./k6/ /app/
+
 WORKDIR /app
 ENTRYPOINT ["/usr/bin/k6"]
 
