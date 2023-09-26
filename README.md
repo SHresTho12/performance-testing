@@ -8,14 +8,16 @@ docker-compose -p logs -f docker-compose-log.yaml up
 
 ## Start the load test
 
-```bash
- docker-compose up loki grafana influxdb chronograf
-```
+Test Files are kept in the `k6/tests` directory
+
+## Run tests
 
 ```bash
-docker-compose -p k6 up promtail
+TEST=circle docker-compose -p k6 up --force-recreate --build k6
 ```
 
+## For linux if the requests fails add this in the `docker-compose` file for the `k6` service instead of `network-mode: host`
+
 ```bash
-docker-compose run --rm k6 run /scripts/setup.test.js
+--add-host=host.docker.internal:host-gateway
 ```

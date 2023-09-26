@@ -1,117 +1,119 @@
 version: "3.4"
 
 services:
-  loki:
-    image: grafana/loki:2.8.2
-    volumes:
-      - ./configs/loki/loki-local-config.yaml:/etc/loki/local-config.yaml
-      - loki-data:/loki
-    command: -config.file=/etc/loki/local-config.yaml
-    networks:
-      - logs
-    ports:
-      - "3100:3100"
-
-  influxdb:
-    image: influxdb:1.8
-    #    entrypoint: /bin/sh
-    #    user: root
-    networks:
-      - k6
-      - grafana
-      - logs
-    volumes:
-      - influxdb-data:/var/lib/influxdb2
-    ports:
-      - "8086:8086"
-    environment:
-      - INFLUXDB_DB=k6
+  # loki:
+  #   image: grafana/loki:2.8.2
+  #   volumes:
+  #     - ./configs/loki/loki-local-config.yaml:/etc/loki/local-config.yaml
+  #     - loki-data:/loki
+  #   command: -config.file=/etc/loki/local-config.yaml
+  #   networks:
+  #     - logs
+  #   ports:
+  #     - "3100:3100"
 
   # influxdb:
-  #   image: influxdb:2.0-alpine
-  #   networks:
-  #     - k6
-  #     - grafana
-  #     - influxdb
+  #   container_name: influxdb
+  #   image: influxdb:1.8
+  #   #    entrypoint: /bin/sh
+  #   #    user: root
+  #   # networks:
+  #   #   - k6
+  #   #   - grafana
+  #   #   - logs
+  #   #   - influxdb
+  #   volumes:
+  #     - influxdb-data:/var/lib/influxdb2
   #   ports:
   #     - "8086:8086"
   #   environment:
-  #     - DOCKER_INFLUXDB_INIT_MODE=setup
-  #     - DOCKER_INFLUXDB_INIT_USERNAME=admin
-  #     - DOCKER_INFLUXDB_INIT_PASSWORD=password1
-  #     - DOCKER_INFLUXDB_INIT_ORG=k6io
-  #     - DOCKER_INFLUXDB_INIT_BUCKET=demo
-  #     - DOCKER_INFLUXD_DB=k6
-  #     - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=token1
-  #   volumes:
-  #     - influxdb-data:/var/lib/influxdb2
+  #     - INFLUXDB_DB=k6
 
-  grafana:
-    networks:
-      - grafana
-      - logs
-      - influxdb
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_INSTALL_PLUGINS=blackmirror1-singlestat-math-panel
-    entrypoint:
-      - sh
-      - -euc
-      - |
-        mkdir -p /etc/grafana/provisioning/datasources
-        cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
-        apiVersion: 1
-        datasources:
-        - name: Loki
-          type: loki
-          access: proxy
-          orgId: 1
-          url: http://loki:3100
-          basicAuth: false
-          isDefault: false
-          version: 1
-          editable: false
-        - name: InfluxDB
-          type: influxdb
-          access: proxy
-          orgId: 1
-          url: http://influxdb:8086
-          database: k6
-          user: admin
-          basicAuth: false
-          isDefault: true
-          version: 1
-          editable: false
-          # password: password1
-          # secureJsonData:
-          #   token: p3Wi1Prm58qweCy3tLBRqf3SblIE2FfPq2Og3V3HHEQrclIN5ULArmT1T7nLemrcCF1SXY80kAyR4rAD80qM6w==
-          # jsonData:
-          #   version: Flux
-          #   organization: k6io
-          #   defaultBucket: demo
-        EOF
-        /run.sh
-    image: grafana/grafana:latest
-    volumes:
-      - ./configs/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
-      - ./configs/grafana/dashboards/:/var/lib/grafana/dashboards/
-  chronograf:
-    image: chronograf:1.8
-    ports:
-      - "8888:8888"
-    environment:
-      - INFLUXDB_URL=http://influxdb:8086
-      - INFLUXDB_USERNAME=root
-      - INFLUXDB_PASSWORD=root
-      - INFLUXDB_SKIP_VERIFY=true
-    depends_on:
-      - influxdb
-    networks:
-      - k6
+  # # influxdb:
+  # #   image: influxdb:2.0-alpine
+  # #   networks:
+  # #     - k6
+  # #     - grafana
+  # #     - influxdb
+  # #   ports:
+  # #     - "8086:8086"
+  # #   environment:
+  # #     - DOCKER_INFLUXDB_INIT_MODE=setup
+  # #     - DOCKER_INFLUXDB_INIT_USERNAME=admin
+  # #     - DOCKER_INFLUXDB_INIT_PASSWORD=password1
+  # #     - DOCKER_INFLUXDB_INIT_ORG=k6io
+  # #     - DOCKER_INFLUXDB_INIT_BUCKET=demo
+  # #     - DOCKER_INFLUXD_DB=k6
+  # #     - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=token1
+  # #   volumes:
+  # #     - influxdb-data:/var/lib/influxdb2
+
+  # grafana:
+  #   networks:
+  #     - grafana
+  #     - logs
+  #     - influxdb
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+  #     - GF_AUTH_ANONYMOUS_ENABLED=true
+  #     - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+  #     - GF_INSTALL_PLUGINS=blackmirror1-singlestat-math-panel
+  #   entrypoint:
+  #     - sh
+  #     - -euc
+  #     - |
+  #       mkdir -p /etc/grafana/provisioning/datasources
+  #       cat <<EOF > /etc/grafana/provisioning/datasources/ds.yaml
+  #       apiVersion: 1
+  #       datasources:
+  #       - name: Loki
+  #         type: loki
+  #         access: proxy
+  #         orgId: 1
+  #         url: http://loki:3100
+  #         basicAuth: false
+  #         isDefault: false
+  #         version: 1
+  #         editable: false
+  #       - name: InfluxDB
+  #         type: influxdb
+  #         access: proxy
+  #         orgId: 1
+  #         url: http://influxdb:8086
+  #         database: k6
+  #         user: admin
+  #         basicAuth: false
+  #         isDefault: true
+  #         version: 1
+  #         editable: false
+  #         # password: password1
+  #         # secureJsonData:
+  #         #   token: p3Wi1Prm58qweCy3tLBRqf3SblIE2FfPq2Og3V3HHEQrclIN5ULArmT1T7nLemrcCF1SXY80kAyR4rAD80qM6w==
+  #         # jsonData:
+  #         #   version: Flux
+  #         #   organization: k6io
+  #         #   defaultBucket: demo
+  #       EOF
+  #       /run.sh
+  #   image: grafana/grafana:latest
+  #   volumes:
+  #     - ./configs/grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
+  #     - ./configs/grafana/dashboards/:/var/lib/grafana/dashboards/
+  # chronograf:
+  #   image: chronograf:1.8
+  #   ports:
+  #     - "8888:8888"
+  #   environment:
+  #     - INFLUXDB_URL=http://influxdb:8086
+  #     - INFLUXDB_USERNAME=root
+  #     - INFLUXDB_PASSWORD=root
+  #     - INFLUXDB_SKIP_VERIFY=true
+  #   depends_on:
+  #     - influxdb
+  #   networks:
+  #     - k6
 
   # k6:
   #   image: grafana/k6
@@ -138,21 +140,22 @@ services:
       - TEST=$TEST
       - SCENARIOS=$SCENARIOS
       - LOG_FILE=$LOG_FILE
-      - K6_OUT=influxdb=http://influxdb:8086/k6
+      #- K6_OUT=influxdb=http://influxdb:8086/k6
     # command: run /dist/$TEST.js
     # command: run --log-output=loki=http://localhost:3100/loki/api/v1/push,label.qa=k6 /dist/$TEST.js
     # command: run --out influxdb=http://localhost:8086/k6 /dist/$TEST.js
     # command: run --out influxdb=http://localhost:8086/k6 --log-output=loki=http://localhost:3100/loki/api/v1/push,label.qa=k6 --env SCENARIOS=$SCENARIOS /dist/$TEST.js
     # command: run --out influxdb=http://localhost:8086/k6 --log-output=file=/logs/test-$LOG_FILE.log --env SCENARIOS=$SCENARIOS /dist/$TEST.js
-    command: run --out influxdb=http://localhost:8086/ /app/tests/$TEST.test.js
+    command: run --out influxdb=http://localhost:8086/k6 --env SCENARIOS=$SCENARIOS /app/tests/$TEST.test.js
     volumes:
       - logs:/logs
-
     network_mode: host
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
     # networks:
     #   - k6
     #   - logs
-    #   - influxdb
+
     ports:
       - "5665:5665"
 
