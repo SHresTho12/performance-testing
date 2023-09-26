@@ -146,12 +146,13 @@ services:
     # command: run --out influxdb=http://localhost:8086/k6 /dist/$TEST.js
     # command: run --out influxdb=http://localhost:8086/k6 --log-output=loki=http://localhost:3100/loki/api/v1/push,label.qa=k6 --env SCENARIOS=$SCENARIOS /dist/$TEST.js
     # command: run --out influxdb=http://localhost:8086/k6 --log-output=file=/logs/test-$LOG_FILE.log --env SCENARIOS=$SCENARIOS /dist/$TEST.js
-    command: run --out influxdb=http://localhost:8086/k6 --env SCENARIOS=$SCENARIOS /app/tests/$TEST.test.js
+    #command: run --out influxdb=http://localhost:8086/k6 --env SCENARIOS=$SCENARIOS /app/tests/$TEST.test.js
+    command: run --out influxdb=http://host.docker.internal:8086/k6 --env SCENARIOS=$SCENARIOS /app/tests/$TEST.test.js
     volumes:
       - logs:/logs
-    network_mode: host
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
+    #network_mode: host
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     # networks:
     #   - k6
     #   - logs

@@ -12,7 +12,7 @@ export const options = {
 export default () => {
   const payload = JSON.stringify({
     email: "ekayesorko@gmail.com",
-    password: "12345678",
+    password: "Abcd1234",
     long_lived: false,
   });
   const headers = { "Content-Type": "application/json" };
