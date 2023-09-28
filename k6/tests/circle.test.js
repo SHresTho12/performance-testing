@@ -6,9 +6,9 @@ import { check, sleep } from "k6";
 import { STANDARD_SCENARIOS } from "../data/scenarios.js";
 import { parseScenarios } from "../utils/scenario.js";
 
-export const options = {
-  scenarios: parseScenarios(__ENV, STANDARD_SCENARIOS),
-};
+// export const options = {
+//   scenarios: parseScenarios(__ENV, STANDARD_SCENARIOS),
+// };
 export default () => {
   const payload = JSON.stringify({
     email: "ekayesorko@gmail.com",

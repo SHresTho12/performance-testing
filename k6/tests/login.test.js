@@ -5,10 +5,14 @@ import http from "k6/http";
 const file = open("../resources/loginCredentials.json");
 const credentials = JSON.parse(file);
 
-export const options = {
-  vus: credentials.length, // Set the number of VUs to match the number of credentials
-  iterations: 1, // Set the number of iterations per VU (1 for sequential execution)
-};
+// export const options = {
+//   vus: credentials.length, // Set the number of VUs to match the number of credentials
+//   iterations: 1, // Set the number of iterations per VU (1 for sequential execution)
+// };
+
+// export const options = {
+//   scenarios: parseScenarios(__ENV, STANDARD_SCENARIOS),
+// };
 
 export default function () {
   // Get the credentials for the current VU
