@@ -21,3 +21,11 @@ TEST=circle docker-compose -p k6 up --force-recreate --build k6
 ```bash
 --add-host=host.docker.internal:host-gateway
 ```
+
+And the change the `locathost` to `host.docker.internal` in the `k6` test file
+
+Also the --out flag link in the compose file of k6 to
+
+```bash
+command: run --out influxdb=http://host.docker.internal:8086/k6 --env SCENARIOS=$SCENARIOS /app/tests/$TEST.test.js
+```

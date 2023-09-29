@@ -165,15 +165,15 @@ services:
       - ./configs/Promtail/promtail-local-config.yaml:/etc/promtail/local-config.yaml
       - ./logs:/logs
     command: -config.file=/etc/promtail/local-config.yaml
-    networks:
-      - logs
-      - k6
-    #network_mode: host
-networks:
-  k6:
-  grafana:
-  logs:
-  influxdb:
+    # networks:
+    #   - logs
+    #   - k6
+    network_mode: host
+# networks:
+#   k6:
+#   grafana:
+#   logs:
+#   influxdb:
 volumes:
   influxdb-data:
   loki-data:
